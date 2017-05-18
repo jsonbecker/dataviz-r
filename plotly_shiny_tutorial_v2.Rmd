@@ -20,7 +20,7 @@ This tutorial is an introduction to making interactive graphics, and even entire
 
 Plotly is the R package used to create the graphs and charts in your visualization project. Plotly has an elegant default graphical style that includes all major graph types and hover-over tooltips. Take a look at the [plotly reference](https://plot.ly/r/) and have this [plotly cheat sheet](https://images.plot.ly/plotly-documentation/images/r_cheat_sheet.pdf) open as you go through the exercises in this tutorial.
 
-Plotly alone can't give you a fully interactive user experience. The Shiny package takes interactivity to the next level. It allows us to include additional complex user controls such as sidebars and buttons. Shiny also makes it easy to create a full website for your data dashboard if you desire. You can see examples of Shiny projects in the [Shiny showcase](https://www.rstudio.com/products/shiny/shiny-user-showcase/), though these examples only scratch the surface of what [Shiny can do](http://shiny.rstudio.com/tutorial/).
+Plotly alone can't give you a fully interactive user experience. The Shiny package takes interactivity to the next level. It allows us to include additional complex user controls such as sidebars and buttons. Shiny also makes it easy to create a full website for your data dashboard if you desire. You can see examples of Shiny projects in the [Shiny showcase](https://www.rstudio.com/products/shiny/shiny-user-showcase/), though these examples only scratch the surface of what [Shiny can do](http://shiny.rstudio.com/tutorial/). [This free online book](https://cpsievert.github.io/plotly_book/index.html) is also a great reference for Plotly.
 
 ```{r shinyquestion, echo=FALSE}
   quiz(
@@ -100,6 +100,10 @@ agencyData <- structure(list(last_hs_name = "Agency Average", hs_diploma = 3758L
 ```{r viewdata-solution}
 head(schoolData, n=5)
 head(agencyData, n=5)
+
+# Remember you access columns by putting the dataset name and the dollar sign, 
+# e.g. schoolData$last_hs_name
+
 ```
 
 ## Plotly Anatomy
@@ -115,6 +119,7 @@ We've defined the arguments `data`, `x`, `y`, `type`, and `mode`. Note: You must
 ### Changing markers and tooltips
 
 Now we can redo the same basic plot, but change the marker styling and add more tooltip information. We've added definitions for `marker`, `hoverinfo`, and `text`.
+
 ```{r prettyscatter, exercise=TRUE, exercise.eval=TRUE, exercise.setup="loadData", echo=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 plot_2 <- plot_ly(data = schoolData, x = ~avg_test_math_8_std, y = ~pct_4yr, mode = "markers", type="scatter",
                     marker = list(size=10,
@@ -138,7 +143,7 @@ plot_2
 ### Adding Traces (Best Fit Line)
 What if we want to add a best fit line to our scatter plot? This is the equivalent of adding another `plot_ly` graph to the same plot. The syntax is the same, but instead of `plot_ly()` we use `add_trace()` after our previous plot.
 
-```{r bestfit, exercise=TRUE, exercise.eval=TRUE, exercise.setup="loadData", echo=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+```{r bestfit, exercise=TRUE, exercise.eval=TRUE, exercise.setup="loadData", echo=TRUE, include=TRUE, message=FALSE, warning=FALSE, exercise.lines=25}
 
 # Necessary to repeat code for plot_2 because of how the html document works (see below)
 plot_2 <- plot_ly(data = schoolData, x = ~avg_test_math_8_std, y = ~pct_4yr, mode = "markers", type="scatter",
@@ -165,11 +170,11 @@ plot_3 <- plot_2 %>%
 plot_3
 ```
 
-Note: In a regular R file we do not have to repeat the code for `plot_2` before the `add_trace`. This is a limitation of the html document environment we are working in. Keep in mind as you work through the exercises that you will have to copy code from earlier exercises if you want to call plot objects from those exercises.
+Note: In a regular R file we do not have to repeat the code for `plot_2` before the `add_trace`. This is a limitation of the web-browser-based environment we are working in. Keep in mind as you work through the exercises that you will have to copy code from earlier exercises if you want to call plot objects from those exercises.
 
 ### Layout: Titles and More
 
-Another thing we may want to do is add simple lines for the agency average and add titles. These all go in `layout()`. The options we will use in `layout()` are: 
+Other features we may want to add are simple lines for the agency average and add titles. These all go in `layout()`. The options we will use in `layout()` are: 
 
 - `title` 
 
@@ -189,6 +194,7 @@ But there are many more things you can add!
 
 ```{r loadData2, include=TRUE}
 
+# Note: Repeating data load due to error in learnr package
 schoolData <- structure(list(last_hs_name = c("River ", "West Spring Hill ", 
 "Upland ", "North ", "South ", "Peak ", "City ", "White Sands ", 
 "Central ", "Camino ", "Orchard "), hs_diploma = c(258L, 435L, 
@@ -222,7 +228,7 @@ agencyData <- structure(list(last_hs_name = "Agency Average", hs_diploma = 3758L
 
 ```
 
-```{r layout-scatter, exercise=TRUE, exercise.eval=TRUE, exercise.setup="loadData2", echo=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+```{r layout-scatter, exercise=TRUE, exercise.eval=TRUE, exercise.setup="loadData2", echo=TRUE, include=TRUE, message=FALSE, warning=FALSE, exercise.lines=30}
 # Necessary to repeat code for plot_2 because of how the html document works (see below)
 plot_2 <- plot_ly(data = schoolData, x = ~avg_test_math_8_std, y = ~pct_4yr, mode = "markers", type="scatter",
                     marker = list(size=10,
@@ -323,6 +329,7 @@ Now it's your turn.
 
 ```{r loadData3, include=TRUE}
 
+# Note: Repeating data load due to error in learnr package
 schoolData <- structure(list(last_hs_name = c("River ", "West Spring Hill ", 
 "Upland ", "North ", "South ", "Peak ", "City ", "White Sands ", 
 "Central ", "Camino ", "Orchard "), hs_diploma = c(258L, 435L, 
@@ -356,8 +363,9 @@ agencyData <- structure(list(last_hs_name = "Agency Average", hs_diploma = 3758L
 
 ```
 
-### Basic bar graph with custom tooltips
-Instead of a scatter plot we will be building a bar graph. Each bar will be a school and our outcome will be 4-year enrollment. Because we want the bars sorted from lowest to highest by enrollment, we use `order_4yr` as our `x` variable. We will add the school names to the x axis in a later step. In the exercise below, there is an outline of the graph code. Input the missing information. Remember, you can return to the first page if you need to see variable names. Feel free to change the color. A full list of colors is available [here](https://www.w3.org/TR/css3-color/#svg-color). Note: You could also use RGB or hex colors.
+### Basic Bar Graph (and Custom Tooltips)
+
+Instead of a scatter plot we will be building a bar graph as an exercise. Each bar will be a school and our outcome will be 4-year enrollment. Because we want the bars sorted from lowest to highest by enrollment, we use `order_4yr` as our `x` variable. We will add the school names to the x-axis in a later step. In the exercise below, there is an outline of the graph code. Input the missing information. Remember, you can return to the first page if you need to see variable names and refer to the previous scatter plot example. Feel free to change the colors or other features. A full list of colors is available [here](https://www.w3.org/TR/css3-color/#svg-color). Note: You could also use RGB or hex colors.
 
 ```{r basic-bar, exercise=TRUE, exercise.eval=FALSE, exercise.setup="loadData3"}
 
@@ -393,7 +401,7 @@ Clicking the solution button will review the solution. Did you get it?
 
 ### Add Additional Bars Side-By-Side
 
-Let's also add the delayed enrollment percentages for each school to our graph. This is equivalent to adding another `plot_ly` graph, so we use `add_trace`. We have to add the trace to `bar_1` so `bar_1` is already filled in. If you want to use your own graph, copy and paste your code from the previous exercise. Complete the outline for `add_trace()`.
+Let's also add the delayed enrollment percentages for each school to our graph. This is equivalent to adding another `plot_ly` graph, so we use `add_trace`. We have to add the trace to `bar_1` so `bar_1` is already filled in from the previous exercise. If you want to use your own graph, copy and paste your code from the previous exercise. Complete the outline for `add_trace()`.
 
 ```{r bar-add-trace, exercise=TRUE, exercise.eval=FALSE, exercise.setup="loadData3"}
 # bar_1 complete or add your code here
@@ -440,7 +448,7 @@ bar_2
 
 To stack the bars, we use `layout()` and add `barmode = "stack"`. Add this below.
 
-```{r bar-stack, exercise=TRUE, exercise.eval=FALSE, exercise.setup="loadData3"}
+```{r bar-stack, exercise=TRUE, exercise.eval=FALSE, exercise.setup="loadData3", exercise.lines=20}
 # bar_1 complete or add your code here
 bar_1 <- plot_ly(data = schoolData, x = ~order_4yr, y = ~pct_4yr, type="bar", name="Seamless",
                   text = ~paste(
@@ -466,6 +474,7 @@ bar_2 <- add_trace(bar_1, x = ~order_4yr, y = ~pct_4yr_delayed, 2, name = "Delay
 bar_3 <- layout(?, barmode = "?")
 bar_3
 ```
+
 ```{r bar-stack-solution}
 bar_1 <- plot_ly(data = schoolData, x = ~order_4yr, y = ~pct_4yr, type="bar", name="Seamless",
                   text = ~paste(
@@ -488,9 +497,9 @@ bar_3
 
 ### Add Lines and Labels
 
-Just like in the previous scatter example, we will now add lines, text and change the layout to add titles
+Just like in the previous scatter example, we will now add lines and text, and change the layout to add titles.
 
-```{r bar-layout, exercise=TRUE, exercise.eval=FALSE, exercise.setup="loadData3"}
+```{r bar-layout, exercise=TRUE, exercise.eval=FALSE, exercise.setup="loadData3", exercise.lines=30}
 # bar_1 complete or add your code here
 bar_1 <- plot_ly(data = schoolData, x = ~order_4yr, y = ~pct_4yr, type="bar", name="Seamless",
                   text = ~paste(
@@ -630,6 +639,7 @@ bar_3_with_opts
 
 ```{r loadData4, include=TRUE}
 
+# Note: Repeating data load due to error in learnr package
 schoolData <- structure(list(last_hs_name = c("River ", "West Spring Hill ", 
 "Upland ", "North ", "South ", "Peak ", "City ", "White Sands ", 
 "Central ", "Camino ", "Orchard "), hs_diploma = c(258L, 435L, 
@@ -675,9 +685,9 @@ printme(x="Your text here")
 
 ```
 
-We want to do the same thing for our graphing code so that we can have the graph be for 2-year or 4-year enrollment. Our input is "2" or "4" and graph output changes based on that input. Below we can take everything in the college enrollment scatter that should change with the selection of 2-year or 4-year enrollment and change them using and if statement. Put 2 or 4 into the function at the bottom and watch the graph change.
+We want to do the same thing for our graphing code so that we can have the graph be for 2-year or 4-year enrollment. Our input is "2" or "4" and graph output changes based on that input. Below we can take all parameters in the college enrollment scatter that should change with the selection of 2-year or 4-year enrollment and change them using and if statement. Put 2 or 4 into the function at the bottom and watch the graph change.
 
-```{r scatter-function, exercise=TRUE, exercise.eval=FALSE, echo=TRUE, include=TRUE, message=FALSE, warning=FALSE, exercise.setup="loadData4"}
+```{r scatter-function, exercise=TRUE, exercise.eval=TRUE, echo=TRUE, include=TRUE, message=FALSE, warning=FALSE, exercise.setup="loadData4", exercise.lines=30}
 
 scatter_function <- function(college_type){
   
@@ -795,6 +805,7 @@ Time permitting, try the same exercise on our bar chart.
 
 ```{r loadData5, include=TRUE}
 
+# Note: Repeating data load due to error in learnr package
 schoolData <- structure(list(last_hs_name = c("River ", "West Spring Hill ", 
 "Upland ", "North ", "South ", "Peak ", "City ", "White Sands ", 
 "Central ", "Camino ", "Orchard "), hs_diploma = c(258L, 435L, 
@@ -828,7 +839,7 @@ agencyData <- structure(list(last_hs_name = "Agency Average", hs_diploma = 3758L
 
 ```
 
-```{r bar-function, exercise=TRUE, exercise.eval=FALSE, echo=TRUE, include=TRUE, message=FALSE, warning=FALSE, exercise.setup="loadData5"}
+```{r bar-function, exercise=TRUE, exercise.eval=FALSE, echo=TRUE, include=TRUE, message=FALSE, warning=FALSE, exercise.setup="loadData5", exercise.lines=30}
 
 bar_function <- function(college_type){
   
@@ -1035,4 +1046,104 @@ bar_function(2)
 
 ```
 
+## Shiny + Plotly
+
+Shiny will allow us to add interactivity to our graphs and even build a full website using R. Here is a [reference page](http://shiny.rstudio.com/images/shiny-cheatsheet.pdf) for building a Shiny App. Shiny apps can get very complicated, but the basic template is simple:
+
+1. Define `ui` (user interface). Typically this is `fluidpage`. This is where the content of the webpage goes. `ui <- fluidpage()`
+
+2. Define `server <- function(input, output) {}` Inside the curly braces put what is updated based on the input from the user interface.
+
+3. Add the line `shinyApp(ui = ui, server = server)`
+
+Done!
+
+User input comes from Shiny widgets. There are [many other widgets available](https://shiny.rstudio.com/gallery/widget-gallery.html). Some example widgets are below. Feel free to try out other widgets from the gallery.
+
+```{r shinywidgets, exercise=TRUE, exercise.eval=TRUE, echo=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+
+ radioButtons("buttons", label = "Select Enrollment Type:",
+                   choices = list("2-year" = 2, "4-year" = 4)
+              )
+
+  selectInput("select", label = h3("Select a School"), 
+    choices = list("School A" = 1, "School B" = 2, "School C" = 3), 
+    selected = 1)
+
+```
+
+### Ending interactivity
+
+Unfotunately this concludes the interactive portion of the tutorial in your web browser because the `learnr` [tutorial package](https://rstudio.github.io/learnr/) does not currently support embedding Shiny Apps. You may still follow along in this tutorial. You will run the remainder of the content on your local machine in RStudio using the R scripts on our [strategicdataproject/dataviz-r ](https://github.com/strategicdataproject/dataviz-r) github page. 
+
+To install RStudio, you must first download and install R [here](https://www.r-project.org/). Then, download and install RStudio [here](https://www.rstudio.com/products/rstudio/download2/). Once in RStudio, install the Shiny and Plotly packages by going to `Tools` -> `Install Packages`. 
+
+### Example Scatter in Shiny
+
+After downloading the [Github repository](https://github.com/strategicdataproject/dataviz-r), open `1_shiny_example_scatter.R`. Scroll to line 126. Here you can see the layout for our ShinyApp. Within `fluidpage()` there is the `titlePanel`, which puts the title at the top, and `sidebarLayout` which gives the page a `sidebarPanel` where our controls are and a `mainPanel` where our graph lives. Inside `server`, we render our `scatterfunction` using `renderPlotly`. 
+
+```{r shinyscatter, echo=TRUE, include=TRUE, eval=FALSE}
+
+# Simple example - control the scatter with a sidebar
+ui <- fluidPage(
+  
+  titlePanel("College Enrollment Scatter"),
+  
+  sidebarLayout(
+    sidebarPanel(
+          radioButtons("buttons", label = "Select Enrollment Type:",
+            choices = list("2-year" = 2, "4-year" = 4)
+          )
+    ),
+    mainPanel(plotlyOutput("scatter"))
+  )
+  
+)
+
+server <- function(input, output) {
+  
+  output$scatter <- renderPlotly({
+    
+    scatter_function(college_type=input$buttons) 
+    
+  }) # End render plotly
+  
+}
+
+shinyApp(ui, server)
+```
+
+This is the result.
+
+```{r, out.width = "100%", echo=FALSE}
+knitr::include_graphics("images/scatter.JPG")
+```
+
+### Try It: Shiny Bar
+
+Your turn! Open `2a_shiny_bar_exercise.R` and fill in the ?'s using the scatter example as a guide. If you get stuck, view the solution in `2b_shiny_bar_solution.R`.
+
+This is the result.
+
+```{r, out.width = "100%", echo=FALSE}
+knitr::include_graphics("images/bar.JPG")
+```
+
+## Full Websites with Shiny
+
+Finally, in the [Github Repository](https://github.com/strategicdataproject/dataviz-r) you can view an example of a two-page website created using Shiny. We use the `shinythemes` package to give the website some styling and include both graphs as tabs on the page. There is also an example text page. View the code below.
+
+```{r fullsite, echo=TRUE, include=TRUE, eval=FALSE}
+
+```
+
+This is the result.
+```{r, out.width = "100%", echo=FALSE}
+knitr::include_graphics("images/full_site_1.JPG")
+```
+```{r, out.width = "100%", echo=FALSE}
+knitr::include_graphics("images/full_site_2.JPG")
+```
+
+This concludes the tutorial. Good luck on your data visualization journeys!
 
